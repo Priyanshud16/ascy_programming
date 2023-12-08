@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+      }
+      h1 {
+        margin-bottom: 20px;
+        color: brown;
+      }
+      .btn>button{
+        height: 50px;
+        width: 150px;
+        margin: 30px;
+      }
+      .btn{
+        margin-top: 0px;
+        
+      }
+      #controls>input{
+        height: 30px;
+        margin: 10px;
+      }
+      #timer{
+        font-size: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Timer</h1>
+    <div id="timer">00:00:00</div>
+    <div id="controls">
+      <input type="number" id="hours" placeholder="Hours" />
+      <input type="number" id="minutes" placeholder="Minutes" />
+      <input type="number" id="seconds" placeholder="Seconds" />
+      <div class="btn">
+      <button id="start">Start</button>
+      <button id="pause">Pause</button>
+      <button id="reset">Reset</button>
+    </div>
+    </div>
+    <script>
+      let timerInterval;
+      let hoursInput = document.getElementById("hours");
+      let minutesInput = document.getElementById("minutes");
+      let secondsInput = document.getElementById("seconds");
+      let startButton = document.getElementById("start");
+      let pauseButton = document.getElementById("pause");
+      let resetButton = document.getElementById("reset");
+      let timerDisplay = document.getElementById("timer");
+      let totalSeconds = 0;
+      function startTimer() {
+        if (!pauseButton.disabled) {
+          totalSeconds =
+            (parseInt(hoursInput.value) || 0) * 3600 +
+            (parseInt(minutesInput.value) || 0) * 60 +
+            (parseInt(secondsInput.value) || 0);
+        }
+        timerInterval = setInterval(updateTimer, 1000);
+        startButton.disabled = true;
+        pauseButton.disabled = false;
+        resetButton.disabled = false;
+      }
+      function pauseTimer() {
+        clearInterval(timerInterval);
+        startButton.disabled = false;
+        pauseButton.disabled = true;
+      }
+      function resetTimer() {
+        clearInterval(timerInterval);
+        hoursInput.value = "";
+        minutesInput.value = "";
+        secondsInput.value = "";
+        timerDisplay.textContent = "00:00:00";
+        startButton.disabled = false;
+        resetButton.disabled = true;
+      }
+      function updateTimer() {
+        if (totalSeconds <= 0) {
+          clearInterval(timerInterval);
+          timerDisplay.textContent = "00:00:00";
+          startButton.disabled = false;
+          resetButton.disabled = true;
+        } else {
+          const hours = Math.floor(totalSeconds / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          const seconds = totalSeconds % 60;
+          timerDisplay.textContent = `${hours
+            .toString()
+            .padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds
+            .toString()
+            .padStart(2, "0")}`;
+          totalSeconds--;
+        }
+      }
+      startButton.addEventListener("click", startTimer);
+      pauseButton.addEventListener("click", pauseTimer);
+      resetButton.addEventListener("click", resetTimer);
+    </script>
+  </body>
+</html>
